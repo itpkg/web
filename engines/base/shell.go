@@ -2,13 +2,16 @@ package base
 
 import (
 	"crypto/aes"
+	"errors"
 	"fmt"
 	"log"
 	"strconv"
 
+	"github.com/chonglou/husky/api/core"
 	"github.com/codegangsta/cli"
 	"github.com/go-martini/martini"
 	"github.com/itpkg/web"
+	"github.com/itpkg/web/cache"
 	"github.com/jrallison/go-workers"
 )
 
@@ -44,7 +47,7 @@ func IocAction(fn func(*martini.ClassicMartini, *cli.Context) error) func(*cli.C
 			return err
 		}
 		mux.Map(&web.Aes{Cip: cip})
-		mux.Map(&web.BytesSerial{})
+		//mux.Map(&web.BytesSerial{})
 
 		if err := web.Loop(func(en web.Engine) error {
 			hd := en.Map(mux.Injector)
@@ -77,6 +80,21 @@ func EnvAction(fn func(string, *cli.Context) error) func(*cli.Context) {
 			log.Fatalln(err)
 		}
 	}
+}
+
+//InvokeAction ivonke action
+func InvokeAction(hd martini.Handler) func(*cli.Context) {
+	return IocAction(func(mux *martini.ClassicMartini, ctx *cli.Context) error {
+		rst, err := mux.Invoke(hd)
+		if err == nil {
+			return nil
+		}
+		val := rst[0].Interface()
+		if val != nil {
+			return val.(error)
+		}
+		return nil
+	})
 }
 
 //ConfigAction config action
@@ -141,9 +159,80 @@ func (p *Engine) Shell() []cli.Command {
 			Aliases: []string{"s"},
 			Usage:   "start the web server",
 			Flags:   []cli.Flag{ENV},
-			Action: EnvAction(func(env string, _ *cli.Context) error {
+			Action: InvokeAction(func() error {
 				return nil
 			}),
+		},
+		{
+			Name:    "routers",
+			Aliases: []string{"ro"},
+			Usage:   "print out all defined routes in match order, with names",
+			Flags:   []cli.Flag{core.ENV},
+			Action: func(c *cli.Context) {
+				mux := martini.Classic()
+				core.Loop(func(en core.Engine) error {
+					en.Mount(mux)
+					return nil
+				})
+				for _, r := range mux.Router.All() {
+					fmt.Printf("%s\t%s\n", r.Method(), r.Pattern())
+				}
+			},
+		},
+		{
+			Name:    "cache",
+			Aliases: []string{"c"},
+			Usage:   "cache operations",
+			Subcommands: []cli.Command{
+				{
+					Name:    "list",
+					Aliases: []string{"l"},
+					Usage:   "list all cache items",
+					Flags:   []cli.Flag{ENV},
+					Action: InvokeAction(func(cp cache.Provider) error {
+						keys, err := cp.Status()
+						if err != nil {
+							return err
+						}
+						for k, v := range keys {
+							fmt.Printf("%s\t%d\n", k, v)
+						}
+						return nil
+					}),
+				},
+				{
+					Name:    "delete",
+					Aliases: []string{"d"},
+					Usage:   "delete item from cache",
+					Flags: []cli.Flag{
+						ENV,
+						cli.StringFlag{
+							Name:  "key, k",
+							Value: "",
+							Usage: "cache item's key",
+						},
+					},
+					Action: IocAction(func(mux *martini.ClassicMartini, ctx *cli.Context) error {
+						k := ctx.String("key")
+						if k == "" {
+							return errors.New("key mustn't null")
+						}
+						_, err := mux.Invoke(func(cp cache.Provider) {
+							cp.Del(k)
+						})
+						return err
+					}),
+				},
+				{
+					Name:    "clear",
+					Aliases: []string{"c"},
+					Usage:   "delete all items from cache",
+					Flags:   []cli.Flag{ENV},
+					Action: InvokeAction(func(cp cache.Provider) error {
+						return cp.Clear()
+					}),
+				},
+			},
 		},
 		{
 			Name:    "database",

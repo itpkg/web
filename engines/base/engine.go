@@ -4,6 +4,7 @@ import (
 	"github.com/codegangsta/inject"
 	"github.com/go-martini/martini"
 	"github.com/itpkg/web"
+	"github.com/itpkg/web/cache"
 	"github.com/jinzhu/gorm"
 )
 
@@ -13,7 +14,12 @@ type Engine struct {
 
 //Map map objects
 func (p *Engine) Map(inj inject.Injector) martini.Handler {
-	return func() {}
+	return func(cfg *Config) {
+		inj.Map(&cache.RedisProvider{
+			Redis:  cfg.Redis.Open(),
+			Prefix: "cache://",
+		})
+	}
 }
 
 //Mount mount to web
