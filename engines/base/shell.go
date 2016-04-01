@@ -1,113 +1,19 @@
 package base
 
 import (
-	"crypto/aes"
 	"errors"
 	"fmt"
-	"log"
-	"strconv"
+	"reflect"
 
-	"github.com/chonglou/husky/api/core"
+	"github.com/attilaolah/strict"
 	"github.com/codegangsta/cli"
 	"github.com/go-martini/martini"
 	"github.com/itpkg/web"
 	"github.com/itpkg/web/cache"
-	"github.com/jrallison/go-workers"
+	"github.com/martini-contrib/csrf"
+	"github.com/martini-contrib/render"
+	"github.com/martini-contrib/sessions"
 )
-
-//IocAction ioc action
-func IocAction(fn func(*martini.ClassicMartini, *cli.Context) error) func(*cli.Context) {
-	return ConfigAction(func(cfg *Config, ctx *cli.Context) error {
-		workers.Configure(map[string]string{
-			"server":   fmt.Sprintf(cfg.Redis.URL()),
-			"database": strconv.Itoa(cfg.Redis.Db),
-			"pool":     strconv.Itoa(cfg.Workers.Pool),
-			"process":  cfg.Workers.ID,
-		})
-
-		mux := martini.Classic()
-
-		db, err := cfg.Database.Open()
-		if err != nil {
-			return err
-		}
-
-		db.LogMode(!cfg.IsProduction())
-
-		mux.Map(db)
-		mux.Map(cfg)
-		mux.Map(cfg.Redis.Open())
-
-		ak, err := cfg.Key(50, 32)
-		if err != nil {
-			return err
-		}
-		cip, err := aes.NewCipher(ak)
-		if err != nil {
-			return err
-		}
-		mux.Map(&web.Aes{Cip: cip})
-		//mux.Map(&web.BytesSerial{})
-
-		if err := web.Loop(func(en web.Engine) error {
-			hd := en.Map(mux.Injector)
-			if _, err := mux.Invoke(hd); err != nil {
-				return err
-			}
-			return nil
-		}); err != nil {
-			return err
-		}
-		return fn(mux, ctx)
-	})
-}
-
-//ENV 运行模式
-var ENV = cli.StringFlag{
-	Name:   "environment, e",
-	Value:  "development",
-	Usage:  "Specifies the environment to run this server under (test/development/production).",
-	EnvVar: "ENV",
-}
-
-//EnvAction by env arg
-func EnvAction(fn func(string, *cli.Context) error) func(*cli.Context) {
-	return func(ctx *cli.Context) {
-		log.Println("Begin...")
-		if err := fn(ctx.String("environment"), ctx); err == nil {
-			log.Println("Done!!!")
-		} else {
-			log.Fatalln(err)
-		}
-	}
-}
-
-//InvokeAction ivonke action
-func InvokeAction(hd martini.Handler) func(*cli.Context) {
-	return IocAction(func(mux *martini.ClassicMartini, ctx *cli.Context) error {
-		rst, err := mux.Invoke(hd)
-		if err == nil {
-			return nil
-		}
-		val := rst[0].Interface()
-		if val != nil {
-			return val.(error)
-		}
-		return nil
-	})
-}
-
-//ConfigAction config action
-func ConfigAction(fn func(*Config, *cli.Context) error) func(*cli.Context) {
-	return EnvAction(func(env string, ctx *cli.Context) error {
-		var cfg Config
-		if err := web.Load(fmt.Sprintf("%s.toml", env), &cfg); err != nil {
-			return err
-		}
-		cfg.Env = env
-		return fn(&cfg, ctx)
-	})
-}
 
 //Shell shell commands
 func (p *Engine) Shell() []cli.Command {
@@ -159,7 +65,43 @@ func (p *Engine) Shell() []cli.Command {
 			Aliases: []string{"s"},
 			Usage:   "start the web server",
 			Flags:   []cli.Flag{ENV},
-			Action: InvokeAction(func() error {
+			Action: IocAction(func(mux *martini.ClassicMartini, _ *cli.Context) error {
+				cfg := mux.Injector.Get(reflect.TypeOf((*Config)(nil))).Interface().(*Config)
+				// if !cfg.IsProduction() {
+				// 	mux.Use(cors.Allow(&cors.Options{
+				// 		AllowOrigins:     []string{"*"},
+				// 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "PATCH"},
+				// 		AllowHeaders:     []string{"Origin", "Authorization"},
+				// 		ExposeHeaders:    []string{"Content-Length"},
+				// 		AllowCredentials: true,
+				// 	}))
+				// }
+
+				sky, err := cfg.Key(120, 32)
+				if err != nil {
+					return err
+				}
+				tky, err := cfg.Key(100, 32)
+				if err != nil {
+					return err
+				}
+				mux.Use(sessions.Sessions("itpkg", sessions.NewCookieStore(sky)))
+				// Setup generation middleware.
+				mux.Use(csrf.Generate(&csrf.Options{
+					Secret:     string(tky),
+					SessionKey: "user",
+				}))
+				mux.Use(strict.Strict)
+				mux.Use(render.Renderer(render.Options{
+					Layout:     "layout",
+					Extensions: []string{".html"},
+				}))
+
+				web.Loop(func(en web.Engine) error {
+					en.Mount(mux)
+					return nil
+				})
+				mux.RunOnAddr(fmt.Sprintf(":%d", cfg.HTTP.Port))
 				return nil
 			}),
 		},
@@ -167,10 +109,10 @@ func (p *Engine) Shell() []cli.Command {
 			Name:    "routers",
 			Aliases: []string{"ro"},
 			Usage:   "print out all defined routes in match order, with names",
-			Flags:   []cli.Flag{core.ENV},
+			Flags:   []cli.Flag{ENV},
 			Action: func(c *cli.Context) {
 				mux := martini.Classic()
-				core.Loop(func(en core.Engine) error {
+				web.Loop(func(en web.Engine) error {
 					en.Mount(mux)
 					return nil
 				})

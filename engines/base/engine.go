@@ -22,11 +22,6 @@ func (p *Engine) Map(inj inject.Injector) martini.Handler {
 	}
 }
 
-//Mount mount to web
-func (p *Engine) Mount(martini.Router) {
-
-}
-
 //Migrate call by db:migrate
 func (p *Engine) Migrate() martini.Handler {
 	return func(db *gorm.DB) {
