@@ -1,0 +1,30 @@
+secrets = "WIUCHlzY3Kyb8I8jHn1PPS1IIg0C2HC6aIYn80C530ZFcXAkNnJlaV4r0IgbkYVY+8MPHjDoZ0lzTKiwtd5hfoV/lXq3HvkJg6luEKIZG2ZDUyCQH4W18Q/me5dY7IO+uMhQM6DmUEv8zDMGl20NJz9pT/isIw7p2KTE35rok6iYHOydpDzfuDDuCpiO1rdwWJRLpT88lyoyPLzqFZT68Fc1rSbolrOP5D1sdStkJvIQbokbY0uT6rvZieVrO+2/3C6AqEPYcrlgvYFqCE7rfGGs1pCirrIxKrvmRpIUW/94fR+jrnvfrMRXBJqE7iRg8X9KJCpzsi8Pcpt15nqpEaOdWzObCXGYGFT4zMyBuJPygNXYFdqn8DZ9nKhR22sQZWoDJrW7dNSA2AUe37JL6m1oUEzxoXoBWPBDSRVbipVatczaQf0nusGJDCR1C4PCrFAVlFoxpIBqtSPBb3VP3CYvKp7OUmuAo7Y2TT9N4HhT3TESHyRIt4c/bClFC9o1lysAwZ51D+azCOkFU63Ja+kXpqcc8Bps7hEwDnCRPlH4ZF55YzIfW/jJ8NkxV2GL70PHU3ksk4T3k0EUxfIDxuXo3UZ2/DNnYFiR0gSxFTL4kV0y+vzFeIEKrx7wHMcWcU/8WHyUUjcxqWV7sj8k2Z7obIoAq8x7mYV2q1b+w+o="
+
+[http]
+  host = "localhost"
+  port = 8080
+  ssl = false
+
+[database]
+  type = "postgres"
+  [database.args]
+    dbname = "itpkg_dev"
+    sslmode = "disable"
+    user = "postgres"
+
+[redis]
+  host = "localhost"
+  port = 6379
+  db = 2
+
+[elastic_search]
+  host = "localhost"
+  port = 9200
+  index = "itpkg-dev"
+
+[workers]
+  id = "itpkg-workers"
+  pool = 15
+  [workers.queues]
+    default = 1
+    emails = 2

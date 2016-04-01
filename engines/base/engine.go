@@ -1,7 +1,6 @@
 package base
 
 import (
-	"github.com/codegangsta/cli"
 	"github.com/codegangsta/inject"
 	"github.com/go-martini/martini"
 	"github.com/itpkg/web"
@@ -35,11 +34,6 @@ func (p *Engine) Seed() martini.Handler {
 //Worker call by worker
 func (p *Engine) Worker() martini.Handler {
 	return func() {}
-}
-
-//Shell shell commands
-func (p *Engine) Shell() []cli.Command {
-	return []cli.Command{}
 }
 
 func init() {
