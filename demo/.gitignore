@@ -1,2 +1,5 @@
 !/development.toml
 /release
+/public
+/node_modules
+/npm-debug.log
