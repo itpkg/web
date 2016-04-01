@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/chonglou/husky/api/core"
 	"github.com/garyburd/redigo/redis"
+	"github.com/itpkg/web"
 	"github.com/jinzhu/gorm"
 	"gopkg.in/olivere/elastic.v3"
 )
@@ -42,7 +42,7 @@ func (p *Config) IsProduction() bool {
 
 //Key get key
 func (p *Config) Key(i, l int) ([]byte, error) {
-	buf, err := core.FromBase64(p.Secrets)
+	buf, err := web.FromBase64(p.Secrets)
 	if err != nil {
 		return nil, err
 	}

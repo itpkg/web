@@ -14,7 +14,7 @@ type Engine struct {
 
 //Map map objects
 func (p *Engine) Map(inj inject.Injector) martini.Handler {
-	return nil
+	return func() {}
 }
 
 //Mount mount to web
@@ -23,7 +23,7 @@ func (p *Engine) Mount(martini.Router) {
 }
 
 //Migrate call by db:migrate
-func (p *Engine) Migrate(*gorm.DB) martini.Handler {
+func (p *Engine) Migrate() martini.Handler {
 	return func(db *gorm.DB) {}
 }
 
