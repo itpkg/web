@@ -11,7 +11,7 @@ import (
 type Engine interface {
 	Map(inj inject.Injector) martini.Handler
 	Mount(martini.Router)
-	Migrate(*gorm.DB)
+	Migrate(*gorm.DB) martini.Handler
 	Seed() martini.Handler
 	Worker() martini.Handler
 	Shell() []cli.Command

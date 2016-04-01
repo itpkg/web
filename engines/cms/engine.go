@@ -23,8 +23,8 @@ func (p *Engine) Mount(martini.Router) {
 }
 
 //Migrate call by db:migrate
-func (p *Engine) Migrate(*gorm.DB) {
-
+func (p *Engine) Migrate(*gorm.DB) martini.Handler {
+	return func(db *gorm.DB) {}
 }
 
 //Seed call by db:seed

@@ -22,8 +22,17 @@ func (p *Engine) Mount(martini.Router) {
 }
 
 //Migrate call by db:migrate
-func (p *Engine) Migrate(*gorm.DB) {
-
+func (p *Engine) Migrate(db *gorm.DB) martini.Handler {
+	return func(db *gorm.DB) {
+		db.AutoMigrate(
+			&Locale{}, &Setting{}, &Notice{},
+			&User{}, &Role{}, &Permission{}, &Log{},
+		)
+		db.Model(&Locale{}).AddUniqueIndex("idx_locales_lang_code", "lang", "code")
+		db.Model(&User{}).AddUniqueIndex("idx_user_provider_type_id", "provider_type", "provider_id")
+		db.Model(&Role{}).AddUniqueIndex("idx_roles_name_resource_type_id", "name", "resource_type", "resource_id")
+		db.Model(&Permission{}).AddUniqueIndex("idx_permissions_user_role", "user_id", "role_id")
+	}
 }
 
 //Seed call by db:seed
