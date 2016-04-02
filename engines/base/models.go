@@ -114,11 +114,3 @@ type Notice struct {
 	Lang    string `sql:"not null;type:varchar(8);index" json:"lang"`
 	Content string `sql:"not null;type:text" json:"content"`
 }
-
-//Setting model
-type Setting struct {
-	gorm.Model
-	Key  string `sql:"not null;unique_index"`
-	Val  []byte `sql:"not null"`
-	Flag bool   `sql:"not null;default:false"`
-}

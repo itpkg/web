@@ -35,6 +35,7 @@ func testProvider(t *testing.T, p i18n.Provider) {
 	key := "hello"
 	val := "你好"
 	p.Set(lang, key, val)
+	p.Set(lang, key+".1", val)
 	if val1 := p.Get(lang, key); val != val1 {
 		t.Errorf("want %s, get %s", val, val1)
 	}

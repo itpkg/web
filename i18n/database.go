@@ -2,7 +2,6 @@ package i18n
 
 import (
 	"log"
-	"time"
 
 	"github.com/jinzhu/gorm"
 	"golang.org/x/text/language"
@@ -10,12 +9,10 @@ import (
 
 //Locale locale model
 type Locale struct {
-	ID        uint   `gorm:"primary_key"`
-	Lang      string `sql:"not null;type:varchar(8);index"`
-	Code      string `sql:"not null;index"`
-	Message   string `sql:"not null;type:varchar(800)"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	gorm.Model
+	Lang    string `sql:"not null;type:varchar(8);index"`
+	Code    string `sql:"not null;index"`
+	Message string `sql:"not null;type:varchar(800)"`
 }
 
 //DatabaseProvider db provider

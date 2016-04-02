@@ -4,9 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"gopkg.in/vmihailenco/msgpack.v2"
-
 	"github.com/garyburd/redigo/redis"
+	"gopkg.in/vmihailenco/msgpack.v2"
 )
 
 //RedisProvider cache redis provider

@@ -1,13 +1,10 @@
 package web_test
 
 import (
-	"crypto/aes"
 	"testing"
 
 	"github.com/itpkg/web"
 )
-
-const hello = "Hello, IT-PACKAGE."
 
 func TestMd5(t *testing.T) {
 	var md5 web.Hashing
@@ -19,23 +16,6 @@ func TestSha512(t *testing.T) {
 	var sha web.Hashing
 	sha = &web.Sha512{}
 	t.Logf("sha512('%s') = %s", hello, sha.Sum([]byte(hello)))
-}
-
-func TestAes(t *testing.T) {
-	key, _ := web.Random(32)
-	cip, _ := aes.NewCipher(key)
-	var en web.Encryptor
-	en = &web.Aes{Cip: cip}
-	if h, e := en.Encode([]byte(hello)); e == nil {
-		t.Logf("aes('%s') = %s", hello, string(h))
-		if d, e := en.Decode(h); e == nil {
-			t.Logf("Want %s, get %s", hello, d)
-		} else {
-			t.Errorf("bad in decode %v", e)
-		}
-	} else {
-		t.Errorf("bad in encode aes %v", e)
-	}
 }
 
 func TestSalt(t *testing.T) {

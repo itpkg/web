@@ -8,6 +8,7 @@ import (
 	"github.com/itpkg/web"
 	"github.com/itpkg/web/cache"
 	"github.com/itpkg/web/i18n"
+	"github.com/itpkg/web/settings"
 	"github.com/jinzhu/gorm"
 )
 
@@ -17,7 +18,7 @@ type Engine struct {
 
 //Map map objects
 func (p *Engine) Map(inj inject.Injector) martini.Handler {
-	return func(cfg *Config, db *gorm.DB, lg *log.Logger) {
+	return func(cfg *Config, enc *web.Encryptor, db *gorm.DB, lg *log.Logger) {
 		t := i18n.I18n{
 			Provider: &i18n.DatabaseProvider{
 				Db:     db,
@@ -28,6 +29,11 @@ func (p *Engine) Map(inj inject.Injector) martini.Handler {
 		}
 		t.Load("locales")
 		inj.Map(&t)
+
+		inj.Map(&settings.DatabaseProvider{
+			Db:  db,
+			Enc: enc,
+		})
 
 		inj.Map(&cache.RedisProvider{
 			Redis:  cfg.Redis.Open(),
@@ -40,7 +46,8 @@ func (p *Engine) Map(inj inject.Injector) martini.Handler {
 func (p *Engine) Migrate() martini.Handler {
 	return func(db *gorm.DB) {
 		db.AutoMigrate(
-			&i18n.Locale{}, &Setting{}, &Notice{},
+			&i18n.Locale{}, &settings.Model{},
+			&Notice{},
 			&User{}, &Role{}, &Permission{}, &Log{},
 		)
 		db.Model(&i18n.Locale{}).AddUniqueIndex("idx_locales_lang_code", "lang", "code")

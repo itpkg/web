@@ -1,19 +1,11 @@
 package web
 
 import (
-	"crypto/aes"
-	"crypto/cipher"
 	"crypto/md5"
 	"crypto/rand"
 	"crypto/sha512"
 	"encoding/hex"
 )
-
-//Encryptor encryptor
-type Encryptor interface {
-	Encode([]byte) ([]byte, error)
-	Decode([]byte) ([]byte, error)
-}
 
 //SaltHashing Hashing with salt
 type SaltHashing struct {
@@ -76,38 +68,4 @@ func (p *Md5) Sum(bs []byte) string {
 //Size size
 func (p *Md5) Size() int {
 	return md5.Size
-}
-
-//Aes aes
-type Aes struct {
-	//16、24或者32位的[]byte，分别对应AES-128, AES-192或AES-256算法
-	Cip cipher.Block
-}
-
-//Encode encrypt
-func (p *Aes) Encode(pn []byte) ([]byte, error) {
-
-	iv := make([]byte, aes.BlockSize)
-	if _, err := rand.Read(iv); err != nil {
-		return nil, err
-	}
-	cfb := cipher.NewCFBEncrypter(p.Cip, iv)
-	ct := make([]byte, len(pn))
-	cfb.XORKeyStream(ct, pn)
-
-	return append(ct, iv...), nil
-
-}
-
-//Decode decrypt
-func (p *Aes) Decode(sr []byte) ([]byte, error) {
-	bln := len(sr)
-	cln := bln - aes.BlockSize
-	ct := sr[0:cln]
-	iv := sr[cln:bln]
-
-	cfb := cipher.NewCFBDecrypter(p.Cip, iv)
-	pt := make([]byte, cln)
-	cfb.XORKeyStream(pt, ct)
-	return pt, nil
 }

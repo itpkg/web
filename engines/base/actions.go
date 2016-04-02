@@ -43,8 +43,7 @@ func IocAction(fn func(*martini.ClassicMartini, *cli.Context) error) func(*cli.C
 		if err != nil {
 			return err
 		}
-		mux.Map(&web.Aes{Cip: cip})
-		//mux.Map(&web.BytesSerial{})
+		mux.Map(&web.Encryptor{Cip: cip})
 
 		if err := web.Loop(func(en web.Engine) error {
 			hd := en.Map(mux.Injector)
