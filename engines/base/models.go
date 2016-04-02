@@ -122,11 +122,3 @@ type Setting struct {
 	Val  []byte `sql:"not null"`
 	Flag bool   `sql:"not null;default:false"`
 }
-
-//Locale model
-type Locale struct {
-	gorm.Model
-	Lang    string `sql:"not null;type:varchar(8);index"`
-	Code    string `sql:"not null;index"`
-	Message string `sql:"not null;type:varchar(800)"`
-}

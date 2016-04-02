@@ -3,25 +3,12 @@ package base
 import (
 	"net/http"
 
+	"github.com/go-martini/martini"
+	"github.com/itpkg/web/i18n"
 	"github.com/martini-contrib/render"
+	"golang.org/x/text/language"
 )
 
-func getHome(r render.Render) {
-	r.HTML(http.StatusOK, "home", nil)
-}
-
-func getUsersSignUp(r render.Render) {
-	r.HTML(http.StatusOK, "users/sign-up", nil)
-}
-
-func getUsersConfirm(r render.Render) {
-	r.HTML(http.StatusOK, "users/confirm", nil)
-}
-
-func getUsersSignIn(r render.Render) {
-	r.HTML(http.StatusOK, "users/sign-in", nil)
-}
-
-func getUsersUnlock(r render.Render) {
-	r.HTML(http.StatusOK, "users/unlock", nil)
+func getLocales(lng *language.Tag, t *i18n.I18n, ps martini.Params, r render.Render) {
+	r.JSON(http.StatusOK, t.Items(lng))
 }

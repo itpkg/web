@@ -10,9 +10,9 @@ import (
 	"github.com/go-martini/martini"
 	"github.com/itpkg/web"
 	"github.com/itpkg/web/cache"
-	"github.com/martini-contrib/csrf"
+	"github.com/itpkg/web/i18n"
+	"github.com/martini-contrib/cors"
 	"github.com/martini-contrib/render"
-	"github.com/martini-contrib/sessions"
 )
 
 //Shell shell commands
@@ -67,30 +67,30 @@ func (p *Engine) Shell() []cli.Command {
 			Flags:   []cli.Flag{ENV},
 			Action: IocAction(func(mux *martini.ClassicMartini, _ *cli.Context) error {
 				cfg := mux.Injector.Get(reflect.TypeOf((*Config)(nil))).Interface().(*Config)
-				// if !cfg.IsProduction() {
-				// 	mux.Use(cors.Allow(&cors.Options{
-				// 		AllowOrigins:     []string{"*"},
-				// 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "PATCH"},
-				// 		AllowHeaders:     []string{"Origin", "Authorization"},
-				// 		ExposeHeaders:    []string{"Content-Length"},
-				// 		AllowCredentials: true,
-				// 	}))
-				// }
+				if !cfg.IsProduction() {
+					mux.Use(cors.Allow(&cors.Options{
+						AllowOrigins:     []string{"*"},
+						AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "PATCH"},
+						AllowHeaders:     []string{"Origin", "Authorization"},
+						ExposeHeaders:    []string{"Content-Length"},
+						AllowCredentials: true,
+					}))
+				}
 
-				sky, err := cfg.Key(120, 32)
-				if err != nil {
-					return err
-				}
-				tky, err := cfg.Key(100, 32)
-				if err != nil {
-					return err
-				}
-				mux.Use(sessions.Sessions("itpkg", sessions.NewCookieStore(sky)))
-				// Setup generation middleware.
-				mux.Use(csrf.Generate(&csrf.Options{
-					Secret:     string(tky),
-					SessionKey: "user",
-				}))
+				// sky, err := cfg.Key(120, 32)
+				// if err != nil {
+				// 	return err
+				// }
+				// tky, err := cfg.Key(100, 32)
+				// if err != nil {
+				// 	return err
+				// }
+				// mux.Use(sessions.Sessions("itpkg", sessions.NewCookieStore(sky)))
+				// mux.Use(csrf.Generate(&csrf.Options{
+				// 	Secret:     string(tky),
+				// 	SessionKey: "user",
+				// }))
+				mux.Use(i18n.LangHandler)
 				mux.Use(strict.Strict)
 				mux.Use(render.Renderer(render.Options{
 					Layout:     "layout",

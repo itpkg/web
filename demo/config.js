@@ -18,6 +18,7 @@ module.exports = function (options) {
             'url-parse',
             'i18next',
             'i18next-xhr-backend',
+            'i18next-localstorage-cache',
             'i18next-browser-languagedetector'
         ]
     };

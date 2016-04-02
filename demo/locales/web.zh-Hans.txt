@@ -1,0 +1,22 @@
+cms.articles.index = 文章列表
+cms.tags.index = 标签列表
+notices.index = 通知列表
+pages.index = 文章列表
+epub.index = Epub电子书列表
+
+buttons.more = 更多
+buttons.view = 查看
+
+locales.en_US = English
+locales.zh_Hans = 简体中文
+
+links.home = 主页
+
+messages.no_match = 页面不存在。
+
+users.sign_in_or_up = 登录/注册
+users.sign_in = 用户登录
+users.sign_up = 注册新用户
+users.did_not_receive_confirm = 没有收到确认邮件？
+users.forgot_your_password = 忘记密码？
+users.did_not_receive_unlock = 没有收到解锁邮件？

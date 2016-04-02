@@ -1,0 +1,22 @@
+cms.articles.index = Articles
+cms.tags.index = Tags
+notices.index = Notices
+pages.index = Pages
+epub.index = Epub books
+
+buttons.more = More
+buttons.view = View
+
+locales.en_US = English
+locales.zh_Hans = 简体中文
+
+links.home = Home
+
+messages.no_match = No match.
+
+users.sign_in_or_up = Sign In/Up
+users.sign_in = Sign in
+users.sign_up = Sign up
+users.did_not_receive_confirm = Didn't receive confirmation instructions?
+users.forgot_your_password = Forgot your password?
+users.did_not_receive_unlock = Didn't receive unlock instructions?
