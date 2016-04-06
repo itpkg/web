@@ -38,15 +38,10 @@ module.exports = function (options) {
     ];
 
     var plugins = [
-        //new webpack.ProvidePlugin({
-        //    //fix 'jQuery is not defined' bug
-        //    $: "jquery",
-        //    jQuery: "jquery"
-        //})
     ];
 
     var htmlOptions = {
-        title: 'IT-PACKAGE',
+        title: 'DEMO',
         inject: true,
         template: 'app/index.html'
     };
