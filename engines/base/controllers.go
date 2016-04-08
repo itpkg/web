@@ -14,13 +14,13 @@ import (
 
 //Site site info model
 type Site struct {
-	Lang        string
-	Title       string
-	SubTitle    string
-	Description string
-	Keywords    string
-	Copyright   string
-	Links       []string
+	Lang        string   `json:"lang"`
+	Title       string   `json:"title"`
+	SubTitle    string   `json:"subTitle"`
+	Description string   `json:"description"`
+	Keywords    string   `json:"keywords"`
+	Copyright   string   `json:"copyright"`
+	Links       []string `json:"links"`
 }
 
 func getSiteInfo(lng *language.Tag, sp settings.Provider, r render.Render, lg *log.Logger) {

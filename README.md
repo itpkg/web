@@ -15,6 +15,7 @@ apm install seti-ui
 - git-plus
 - react
 - atom-beautify
+- term3
 - autosave: enabled is true
 
 # Thanks
