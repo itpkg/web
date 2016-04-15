@@ -13,6 +13,7 @@ locales.zh_Hans = 简体中文
 links.home = Home
 
 messages.no_match = No match.
+messages.build_using = Build using <a href="{{link}}" target="_blank">{{link}}</a>.
 
 users.sign_in_or_up = Sign In/Up
 users.sign_in = Sign in

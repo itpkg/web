@@ -1,7 +1,7 @@
 import {
     SIGN_IN,
     SIGN_OUT,
-    REFRUSH
+    REFRESH
 } from '../constants'
 
 export function signIn(user) {
@@ -19,7 +19,7 @@ export function signOut() {
 
 export function refresh(info) {
     return {
-        type: REFRUSH,
+        type: REFRESH,
         info: info
     }
 }

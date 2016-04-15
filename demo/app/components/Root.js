@@ -2,7 +2,7 @@ import React from 'react'
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import { Router, Route, browserHistory } from 'react-router'
-import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
+import { syncHistoryWithStore,routerReducer } from 'react-router-redux'
 
 import reducers from '../reducers'
 import Base from './base/Router'

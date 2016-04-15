@@ -33,6 +33,7 @@ func getSiteInfo(lng *language.Tag, sp settings.Provider, r render.Render, lg *l
 	r.JSON(http.StatusOK, si)
 }
 
-func getLocales(lng *language.Tag, t *i18n.I18n, ps martini.Params, r render.Render) {
-	r.JSON(http.StatusOK, t.Items(lng))
+func getLocales(t *i18n.I18n, ps martini.Params, r render.Render) {
+	lng := i18n.Match(ps["lang"])
+	r.JSON(http.StatusOK, t.Items(&lng))
 }

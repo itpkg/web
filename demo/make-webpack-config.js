@@ -17,6 +17,8 @@ module.exports = function(options) {
         'react-bootstrap',
         'react-router-redux',
 
+        'jwt-decode',
+
         'i18next',
         'i18next-xhr-backend',
         'i18next-localstorage-cache',
