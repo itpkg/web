@@ -4,9 +4,7 @@ const Widget = React.createClass({
   render: function() {
     return (
       <div>
-        Layout:
-        <br/>
-        {this.props.children}
+        no match
       </div>
     );
   }

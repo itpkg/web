@@ -6,18 +6,26 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = function(options) {
     var entry = {
-      main:path.join(__dirname, 'app', 'main'),
-      vendor:[
+      main: path.join(__dirname, 'app', 'main'),
+      vendor: [
         'bootstrap',
-        'jquery'
+        'jquery',
+        'i18next',
+        'i18next-xhr-backend',
+        'i18next-localstorage-cache',
+        'i18next-browser-languagedetector'
       ]
 
     };
 
     var plugins = [
+      new webpack.ProvidePlugin({
+        $: "jquery",
+        jQuery: "jquery"
+      }),
       new webpack.DefinePlugin({
-          VERSION: JSON.stringify(options.version),
-          API: JSON.stringify(options.api),
+        VERSION: JSON.stringify(options.version),
+        API: JSON.stringify(options.api),
       }),
       new webpack.optimize.CommonsChunkPlugin({name: 'vendor'})
     ];
@@ -67,9 +75,7 @@ module.exports = function(options) {
     plugins.push(new HtmlWebpackPlugin(htmlOptions));
 
     return {
-      entry: {
-        app: ["./app/main.js"]
-      },
+      entry: entry,
       plugins:plugins,
       module:{
         loaders:loaders,
@@ -80,6 +86,7 @@ module.exports = function(options) {
         filename: options.compress ? "[id]-[chunkhash].js" : '[name].js'
       },
       devServer:{
+        historyApiFallback:true,
         port:4200
       }
     }
