@@ -1,15 +1,22 @@
 var path = require("path");
 var webpack = require("webpack");
-//var ExtractTextPlugin = require("extract-text-webpack-plugin");
-//var StatsPlugin = require("stats-webpack-plugin");
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var StatsPlugin = require("stats-webpack-plugin");
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = function(options) {
     var entry = {
       main: path.join(__dirname, 'app', 'main'),
       vendor: [
-        'bootstrap',
         'jquery',
+        'bootstrap',
+
+        'react',
+        'react-router',
+        'react-redux',
+        'react-bootstrap',
+        'react-router-redux',
+
         'i18next',
         'i18next-xhr-backend',
         'i18next-localstorage-cache',
@@ -32,8 +39,7 @@ module.exports = function(options) {
 
     var loaders = [
       { test: /\.jsx?$/, exclude: /(node_modules)/, loader: "babel" },
-      {test: /\.(png|jpg|jpeg|gif|ico|svg|ttf|woff|woff2|eot)$/, loader: "file"},
-      { test: /\.css$/, loaders: ["style", "css"] },
+      { test: /\.(png|jpg|jpeg|gif|ico|svg|ttf|woff|woff2|eot)$/, loader: "file" }
     ];
 
     var htmlOptions = {
@@ -70,6 +76,15 @@ module.exports = function(options) {
         }
       }));
       plugins.push(new webpack.NoErrorsPlugin());
+    }else{
+      plugins.push(new StatsPlugin('stats.json', {chunkModules: true, exclude:[/node_modules/]}));
+    }
+
+    if(options.css){
+      loaders.push({ test: /\.css$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader")});
+      plugins.push(new ExtractTextPlugin(options.compress ? "[id]-[chunkhash].css" : "[name].css"));
+    }else{
+      loaders.push({ test: /\.css$/, loaders: ["style", "css"] });
     }
 
     plugins.push(new HtmlWebpackPlugin(htmlOptions));
