@@ -32,7 +32,7 @@ func (p *Engine) Shell() []cli.Command {
 					Secrets: web.ToBase64(sec),
 					HTTP: HTTP{
 						Host: "localhost",
-						Port: 8080,
+						Port: 3000,
 					},
 					Database: Database{
 						Type: "postgres",
