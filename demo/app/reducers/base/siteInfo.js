@@ -1,6 +1,6 @@
 import {  REFRESH } from '../../constants'
 
-const initState = {};
+const initState = {links:[]};
 
 export function siteInfo(state = initState, action) {
     //console.log(action);
