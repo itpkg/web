@@ -33,8 +33,10 @@ export default connect(
   state=>({info:state.siteInfo}),
   dispatch => ({
     onRefresh: function(){
-      ajax("get", "/site/info", null, function(rst){
-        dispatch(refresh(rst));
+      ajax("get", "/site/info", null, function(ifo){
+        dispatch(refresh(ifo));
+        document.documentElement.lang = ifo.lang;
+        document.title = ifo.title;
       });
     }
   })

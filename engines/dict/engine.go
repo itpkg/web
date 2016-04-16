@@ -1,37 +1,29 @@
-package oauth
+package dict
 
 import (
-	"log"
-
 	"github.com/codegangsta/inject"
-	"github.com/garyburd/redigo/redis"
 	"github.com/go-martini/martini"
 	"github.com/itpkg/web"
-	"github.com/itpkg/web/engines/base"
-	"github.com/itpkg/web/token"
+	"github.com/jinzhu/gorm"
 )
 
-//Engine oauth engine
+//Engine dict engine
 type Engine struct {
 }
 
 //Map map objects
 func (p *Engine) Map(inj inject.Injector) martini.Handler {
-	return func(re *redis.Pool, cfg *base.Config, lg *log.Logger) {
-		key, err := cfg.Key(60, 17)
-		if err != nil {
-			lg.Fatal(err)
-		}
-		inj.Map(&token.Jwt{
-			Provider: &token.RedisProvider{Redis: re},
-			Key:      key,
-		})
+	return func() {
+		var dic Provider
+		dic = &StarDict{Dir: "tmp/dic"}
+		inj.Map(dic)
 	}
 }
 
 //Migrate call by db:migrate
 func (p *Engine) Migrate() martini.Handler {
-	return func() {
+	return func(db *gorm.DB) {
+
 	}
 }
 
