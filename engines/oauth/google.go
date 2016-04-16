@@ -30,7 +30,7 @@ type GoogleUser struct {
 func (p *GoogleUser) Save(db *gorm.DB) (*base.User, error) {
 
 	var u base.User
-	err := db.Where("provider_id = ? AND provider_type = ?", "google", p.ID).First(&u).Error
+	err := db.Where("provider_id = ? AND provider_type = ?", p.ID, "google").First(&u).Error
 	u.Email = p.Email
 	u.Name = p.Name
 	u.Logo = p.Picture

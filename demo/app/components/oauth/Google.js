@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import i18next from 'i18next'
 import { Alert } from 'react-bootstrap'
 import parse from 'url-parse'
-import {push} from 'react-router-redux'
 import { browserHistory } from 'react-router'
 
 import {signIn} from '../../actions/oauth'
@@ -45,7 +44,7 @@ export default connect(
                 },
                 function (tkn) {
                     dispatch(signIn(tkn));
-                    dispatch(browserHistory.push('/'))
+                    browserHistory.push('/');
                 },
               )
         }

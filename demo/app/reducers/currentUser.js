@@ -7,7 +7,7 @@ const key = 'token';
 function parse(tkn) {
     try {
         return jwtDecode(tkn);
-    } catch (e) {
+    } catch (e) {      
         return {}
     }
 }
