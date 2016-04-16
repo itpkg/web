@@ -1,4 +1,5 @@
-import {currentUser} from './base/currentUser'
-import {siteInfo} from './base/siteInfo'
+import {currentUser} from './currentUser'
+import {siteInfo} from './siteInfo'
+import {oauth2} from './oauth2'
 
-module.exports = {currentUser, siteInfo}
+module.exports = {currentUser, siteInfo, oauth2}

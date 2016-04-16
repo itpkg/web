@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import Header from './Header'
 import Footer from './Footer'
 import {refresh} from '../actions/base'
-import {Get} from '../ajax'
+import {ajax} from '../utils'
 
 const Widget = React.createClass({
   componentDidMount: function(){
@@ -33,7 +33,7 @@ export default connect(
   state=>({info:state.siteInfo}),
   dispatch => ({
     onRefresh: function(){
-      Get("/site/info", null, function(rst){
+      ajax("get", "/site/info", null, function(rst){
         dispatch(refresh(rst));
       });
     }

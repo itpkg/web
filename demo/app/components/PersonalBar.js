@@ -4,21 +4,27 @@ import { connect } from 'react-redux'
 import i18next from 'i18next'
 
 import { CurrentUser } from '../mixins'
+import { refresh }from '../actions/oauth'
+import { ajax } from '../utils'
 
 const Widget = React.createClass({
   mixins: [CurrentUser],
+  componentDidMount: function(){
+    const {onRefresh} = this.props;
+    onRefresh();
+  },
   render: function() {
-    const {user} = this.props;
+    const {user, oauth} = this.props;
     var title, links;
     if (this.isSignIn()){
       title = i18next.t("users.welcome", {name:user.name});
       links = [
-        {href:"/users/profile", label:i18next.t("users.profile")}
+        {href:"/users/dashboard", label:i18next.t("users.dashboard")}
       ];
     }else{
       title = i18next.t("users.sign_in_or_up");
       links = [
-        {href:"/users/sign_in", label:i18next.t("users.sign_in_with_google")}
+        {href:oauth.google, label:i18next.t("users.sign_in_with_google")}
       ];
     }
     return (
@@ -26,7 +32,7 @@ const Widget = React.createClass({
         {links.map(function(l, i){
           return l == null ?
             (<MenuItem key={i} divider />) :
-            (<MenuItem key={i}>{l.label}</MenuItem>)
+            (<MenuItem key={i} href={l.href}>{l.label}</MenuItem>)
         })}
       </NavDropdown>
     );
@@ -35,8 +41,17 @@ const Widget = React.createClass({
 
 Widget.propTypes = {
     user: PropTypes.object.isRequired,
+    oauth: PropTypes.object.isRequired,
+    onRefresh: PropTypes.func.isRequired,
 };
 
 export default connect(
-  state => ({ user: state.currentUser })
+  state => ({ user: state.currentUser, oauth:state.oauth2 }),
+  dispatch => ({
+    onRefresh: function(){
+      ajax("get", "/oauth/sign_in", null, function(rst){
+        dispatch(refresh(rst));
+      });
+    }
+  })
 )(Widget);

@@ -18,6 +18,7 @@ module.exports = function(options) {
         'react-router-redux',
 
         'jwt-decode',
+        'url-parse',
 
         'i18next',
         'i18next-xhr-backend',

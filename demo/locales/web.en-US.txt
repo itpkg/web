@@ -12,15 +12,11 @@ locales.zh_Hans = 简体中文
 
 links.home = Home
 
+messages.please_waiting = Please waiting.
 messages.no_match = No match.
 messages.build_using = Build using <a href="{{link}}" target="_blank">{{link}}</a>.
 
 users.welcome = Welcome, {{name}}.
 users.sign_in_or_up = Sign In/Up
-users.sign_in = Sign in
 users.sign_in_with_google = Sign in with google account.
-users.profile = Profile
-users.sign_up = Sign up
-users.did_not_receive_confirm = Didn't receive confirmation instructions?
-users.forgot_your_password = Forgot your password?
-users.did_not_receive_unlock = Didn't receive unlock instructions?
+users.dashboard = Dashboard

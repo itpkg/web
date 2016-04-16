@@ -1,6 +1,6 @@
 import jwtDecode from 'jwt-decode'
 
-import { SIGN_IN, SIGN_OUT } from '../../constants'
+import { SIGN_IN, SIGN_OUT } from '../constants'
 
 const key = 'token';
 

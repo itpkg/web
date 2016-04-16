@@ -1,4 +1,4 @@
-import {  REFRESH } from '../../constants'
+import {  REFRESH } from '../constants'
 
 const initState = {links:[]};
 

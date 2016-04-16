@@ -12,15 +12,11 @@ locales.zh_Hans = 简体中文
 
 links.home = 主页
 
+messages.please_waiting = 请耐心等待。
 messages.no_match = 页面不存在。
 messages.build_using = 使用 <a href="{{link}}" target="_blank">{{link}}</a> 搭建.
 
 users.welcome = 欢迎你, {{name}}.
 users.sign_in_or_up = 登录/注册
-users.sign_in = 用户登录
 users.sign_in_with_google = 使用Google账户登录。
-users.profile = 个人信息
-users.sign_up = 注册新用户
-users.did_not_receive_confirm = 没有收到确认邮件？
-users.forgot_your_password = 忘记密码？
-users.did_not_receive_unlock = 没有收到解锁邮件？
+users.dashboard = 控制面板
