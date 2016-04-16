@@ -1,4 +1,4 @@
-package base
+package config
 
 import (
 	"fmt"
@@ -10,8 +10,8 @@ import (
 	"gopkg.in/olivere/elastic.v3"
 )
 
-//Config model
-type Config struct {
+//Model model
+type Model struct {
 	Env           string        `toml:"-"`
 	Secrets       string        `toml:"secrets"`
 	HTTP          HTTP          `toml:"http"`
@@ -22,7 +22,7 @@ type Config struct {
 }
 
 //Home home url
-func (p *Config) Home() string {
+func (p *Model) Home() string {
 	if p.IsProduction() {
 		if p.HTTP.Ssl {
 			return fmt.Sprintf("https://%s", p.HTTP.Host)
@@ -36,12 +36,12 @@ func (p *Config) Home() string {
 }
 
 //IsProduction is production mode ?
-func (p *Config) IsProduction() bool {
+func (p *Model) IsProduction() bool {
 	return p.Env == "production"
 }
 
 //Key get key
-func (p *Config) Key(i, l int) ([]byte, error) {
+func (p *Model) Key(i, l int) ([]byte, error) {
 	buf, err := web.FromBase64(p.Secrets)
 	if err != nil {
 		return nil, err

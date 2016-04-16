@@ -11,6 +11,7 @@ import (
 	"github.com/go-martini/martini"
 	"github.com/itpkg/web"
 	"github.com/itpkg/web/cache"
+	"github.com/itpkg/web/config"
 	"github.com/itpkg/web/i18n"
 	"github.com/martini-contrib/cors"
 	"github.com/martini-contrib/render"
@@ -23,8 +24,8 @@ func (p *Engine) Shell() []cli.Command {
 			Name:    "init",
 			Aliases: []string{"i"},
 			Usage:   "init config file",
-			Flags:   []cli.Flag{ENV},
-			Action: EnvAction(func(env string, _ *cli.Context) error {
+			Flags:   []cli.Flag{config.ENV},
+			Action: config.EnvAction(func(env string, _ *cli.Context) error {
 				fn := fmt.Sprintf("%s.toml", env)
 				if _, err := os.Stat(fn); err == nil {
 					return fmt.Errorf("file %s already exists", fn)
@@ -34,13 +35,13 @@ func (p *Engine) Shell() []cli.Command {
 				if err != nil {
 					return err
 				}
-				return web.Store(fn, &Config{
+				return web.Store(fn, &config.Model{
 					Secrets: web.ToBase64(sec),
-					HTTP: HTTP{
+					HTTP: config.HTTP{
 						Host: "localhost",
 						Port: 3000,
 					},
-					Database: Database{
+					Database: config.Database{
 						Type: "postgres",
 						Args: map[string]string{
 							"dbname":  "itpkg_dev",
@@ -48,17 +49,17 @@ func (p *Engine) Shell() []cli.Command {
 							"user":    "postgres",
 						},
 					},
-					Redis: Redis{
+					Redis: config.Redis{
 						Host: "localhost",
 						Port: 6379,
 						Db:   2,
 					},
-					ElasticSearch: ElasticSearch{
+					ElasticSearch: config.ElasticSearch{
 						Host:  "localhost",
 						Port:  9200,
 						Index: "itpkg-dev",
 					},
-					Workers: Workers{
+					Workers: config.Workers{
 						ID:     "itpkg-workers",
 						Pool:   15,
 						Queues: map[string]int{"default": 1, "emails": 2},
@@ -70,9 +71,9 @@ func (p *Engine) Shell() []cli.Command {
 			Name:    "server",
 			Aliases: []string{"s"},
 			Usage:   "start the web server",
-			Flags:   []cli.Flag{ENV},
-			Action: IocAction(func(mux *martini.ClassicMartini, _ *cli.Context) error {
-				cfg := mux.Injector.Get(reflect.TypeOf((*Config)(nil))).Interface().(*Config)
+			Flags:   []cli.Flag{config.ENV},
+			Action: config.IocAction(func(mux *martini.ClassicMartini, _ *cli.Context) error {
+				cfg := mux.Injector.Get(reflect.TypeOf((*config.Model)(nil))).Interface().(*config.Model)
 				if !cfg.IsProduction() {
 					mux.Use(cors.Allow(&cors.Options{
 						AllowOrigins:     []string{"*"},
@@ -102,7 +103,7 @@ func (p *Engine) Shell() []cli.Command {
 			Name:    "routers",
 			Aliases: []string{"ro"},
 			Usage:   "print out all defined routes in match order, with names",
-			Flags:   []cli.Flag{ENV},
+			Flags:   []cli.Flag{config.ENV},
 			Action: func(c *cli.Context) {
 				mux := martini.Classic()
 				web.Loop(func(en web.Engine) error {
@@ -123,8 +124,8 @@ func (p *Engine) Shell() []cli.Command {
 					Name:    "list",
 					Aliases: []string{"l"},
 					Usage:   "list all cache items",
-					Flags:   []cli.Flag{ENV},
-					Action: InvokeAction(func(cp cache.Provider) error {
+					Flags:   []cli.Flag{config.ENV},
+					Action: config.InvokeAction(func(cp cache.Provider) error {
 						keys, err := cp.Status()
 						if err != nil {
 							return err
@@ -140,14 +141,14 @@ func (p *Engine) Shell() []cli.Command {
 					Aliases: []string{"d"},
 					Usage:   "delete item from cache",
 					Flags: []cli.Flag{
-						ENV,
+						config.ENV,
 						cli.StringFlag{
 							Name:  "key, k",
 							Value: "",
 							Usage: "cache item's key",
 						},
 					},
-					Action: IocAction(func(mux *martini.ClassicMartini, ctx *cli.Context) error {
+					Action: config.IocAction(func(mux *martini.ClassicMartini, ctx *cli.Context) error {
 						k := ctx.String("key")
 						if k == "" {
 							return errors.New("key mustn't null")
@@ -162,8 +163,8 @@ func (p *Engine) Shell() []cli.Command {
 					Name:    "clear",
 					Aliases: []string{"c"},
 					Usage:   "delete all items from cache",
-					Flags:   []cli.Flag{ENV},
-					Action: InvokeAction(func(cp cache.Provider) error {
+					Flags:   []cli.Flag{config.ENV},
+					Action: config.InvokeAction(func(cp cache.Provider) error {
 						return cp.Clear()
 					}),
 				},
@@ -178,8 +179,8 @@ func (p *Engine) Shell() []cli.Command {
 					Name:    "create",
 					Aliases: []string{"n"},
 					Usage:   "create database",
-					Flags:   []cli.Flag{ENV},
-					Action: ConfigAction(func(cfg *Config, ctx *cli.Context) error {
+					Flags:   []cli.Flag{config.ENV},
+					Action: config.Action(func(cfg *config.Model, ctx *cli.Context) error {
 						switch cfg.Database.Type {
 						case "postgres":
 							c, a := cfg.Database.Execute(fmt.Sprintf("CREATE DATABASE %s WITH ENCODING='UTF8'", cfg.Database.Args["dbname"]))
@@ -193,8 +194,8 @@ func (p *Engine) Shell() []cli.Command {
 					Name:    "console",
 					Aliases: []string{"c"},
 					Usage:   "start a console for the database",
-					Flags:   []cli.Flag{ENV},
-					Action: ConfigAction(func(cfg *Config, ctx *cli.Context) error {
+					Flags:   []cli.Flag{config.ENV},
+					Action: config.Action(func(cfg *config.Model, ctx *cli.Context) error {
 						c, a := cfg.Database.Console()
 						return web.Shell(c, a...)
 					}),
@@ -203,8 +204,8 @@ func (p *Engine) Shell() []cli.Command {
 					Name:    "drop",
 					Aliases: []string{"d"},
 					Usage:   "drop database",
-					Flags:   []cli.Flag{ENV},
-					Action: ConfigAction(func(cfg *Config, ctx *cli.Context) error {
+					Flags:   []cli.Flag{config.ENV},
+					Action: config.Action(func(cfg *config.Model, ctx *cli.Context) error {
 						switch cfg.Database.Type {
 						case "postgres":
 							c, a := cfg.Database.Execute(fmt.Sprintf("DROP DATABASE %s", cfg.Database.Args["dbname"]))
@@ -218,8 +219,8 @@ func (p *Engine) Shell() []cli.Command {
 					Name:    "migrate",
 					Aliases: []string{"m"},
 					Usage:   "migrate the database",
-					Flags:   []cli.Flag{ENV},
-					Action: IocAction(func(mux *martini.ClassicMartini, ctx *cli.Context) error {
+					Flags:   []cli.Flag{config.ENV},
+					Action: config.IocAction(func(mux *martini.ClassicMartini, ctx *cli.Context) error {
 						return web.Loop(func(en web.Engine) error {
 							_, err := mux.Invoke(en.Migrate())
 							return err
@@ -230,8 +231,8 @@ func (p *Engine) Shell() []cli.Command {
 					Name:    "seed",
 					Aliases: []string{"s"},
 					Usage:   "load the seed data",
-					Flags:   []cli.Flag{ENV},
-					Action: IocAction(func(mux *martini.ClassicMartini, ctx *cli.Context) error {
+					Flags:   []cli.Flag{config.ENV},
+					Action: config.IocAction(func(mux *martini.ClassicMartini, ctx *cli.Context) error {
 						return web.Loop(func(en web.Engine) error {
 							_, err := mux.Invoke(en.Seed())
 							return err

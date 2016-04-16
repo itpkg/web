@@ -4,11 +4,14 @@ import (
 	"log"
 
 	"github.com/codegangsta/inject"
+	"github.com/garyburd/redigo/redis"
 	"github.com/go-martini/martini"
 	"github.com/itpkg/web"
 	"github.com/itpkg/web/cache"
+	"github.com/itpkg/web/config"
 	"github.com/itpkg/web/i18n"
 	"github.com/itpkg/web/settings"
+	"github.com/itpkg/web/token"
 	"github.com/jinzhu/gorm"
 )
 
@@ -18,7 +21,7 @@ type Engine struct {
 
 //Map map objects
 func (p *Engine) Map(inj inject.Injector) martini.Handler {
-	return func(cfg *Config, enc *web.Encryptor, db *gorm.DB, lg *log.Logger) {
+	return func(re *redis.Pool, cfg *config.Model, enc *web.Encryptor, db *gorm.DB, lg *log.Logger) {
 		t := i18n.I18n{
 			Provider: &i18n.DatabaseProvider{
 				Db:     db,
@@ -36,8 +39,18 @@ func (p *Engine) Map(inj inject.Injector) martini.Handler {
 		})
 
 		inj.Map(&cache.RedisProvider{
-			Redis:  cfg.Redis.Open(),
+			Redis:  re,
 			Prefix: "cache://",
+		})
+
+		//jwt for oauth
+		key, err := cfg.Key(60, 17)
+		if err != nil {
+			lg.Fatal(err)
+		}
+		inj.Map(&token.Jwt{
+			Provider: &token.RedisProvider{Redis: re},
+			Key:      key,
 		})
 
 	}

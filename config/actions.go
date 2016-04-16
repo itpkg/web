@@ -1,4 +1,4 @@
-package base
+package config
 
 import (
 	"crypto/aes"
@@ -14,7 +14,7 @@ import (
 
 //IocAction ioc action
 func IocAction(fn func(*martini.ClassicMartini, *cli.Context) error) func(*cli.Context) {
-	return ConfigAction(func(cfg *Config, ctx *cli.Context) error {
+	return Action(func(cfg *Model, ctx *cli.Context) error {
 		workers.Configure(map[string]string{
 			"server":   fmt.Sprintf(cfg.Redis.URL()),
 			"database": strconv.Itoa(cfg.Redis.Db),
@@ -93,10 +93,10 @@ func InvokeAction(hd martini.Handler) func(*cli.Context) {
 	})
 }
 
-//ConfigAction config action
-func ConfigAction(fn func(*Config, *cli.Context) error) func(*cli.Context) {
+//Action config action
+func Action(fn func(*Model, *cli.Context) error) func(*cli.Context) {
 	return EnvAction(func(env string, ctx *cli.Context) error {
-		var cfg Config
+		var cfg Model
 		if err := web.Load(fmt.Sprintf("%s.toml", env), &cfg); err != nil {
 			return err
 		}

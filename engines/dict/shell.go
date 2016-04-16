@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/codegangsta/cli"
-	"github.com/itpkg/web/engines/base"
+	"github.com/itpkg/web/config"
 )
 
 //Shell shell commands
@@ -14,8 +14,8 @@ func (p *Engine) Shell() []cli.Command {
 			Name:    "dicts",
 			Aliases: []string{"ds"},
 			Usage:   "list dicts",
-			Flags:   []cli.Flag{base.ENV},
-			Action: base.InvokeAction(func(dp Provider) error {
+			Flags:   []cli.Flag{config.ENV},
+			Action: config.InvokeAction(func(dp Provider) error {
 				ds, er := dp.List()
 				if er != nil {
 					return er
