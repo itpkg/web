@@ -3,6 +3,7 @@ cms.tags.index = Tags
 notices.index = Notices
 pages.index = Pages
 epub.index = Epub books
+dict.index = Dict
 
 buttons.more = More
 buttons.view = View
@@ -12,6 +13,7 @@ locales.zh_Hans = 简体中文
 
 links.home = Home
 
+messages.please_sign_in = Please sign in before continue.
 messages.please_waiting = Please waiting.
 messages.no_match = No match.
 messages.build_using = Build using <a href="{{link}}" target="_blank">{{link}}</a>.

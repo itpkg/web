@@ -9,7 +9,7 @@ const Widget = React.createClass({
         <br/>
         <div className="col-md-offset-1 col-md-10">
           <Alert bsStyle="warning">
-            <strong>{i18next.t("messages.no_match")}：</strong>{new Date().toLocaleString()}
+            <strong>{i18next.t("messages.please_sign_in")}：</strong>{new Date().toLocaleString()}
           </Alert>
         </div>
       </div>

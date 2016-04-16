@@ -1,12 +1,12 @@
 import React from 'react'
-import { Route } from 'react-router'
+import { IndexRoute, Route } from 'react-router'
 
-import Search from './Search'
+import Index from './Index'
 import Layout from '../Layout'
 
 const Widget = (
-      <Route path='/dict' component={Layout}>
-        <Route path="/" component={Search}/>        
+      <Route path='/dict'>
+        <IndexRoute component={Index}/>
       </Route>
 );
 

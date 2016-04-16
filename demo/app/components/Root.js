@@ -6,9 +6,11 @@ import { syncHistoryWithStore,routerReducer } from 'react-router-redux'
 
 import reducers from '../reducers'
 import NoMatch from './NoMatch'
+import Layout from './Layout'
 
 import Base from './base/Router'
 import Oauth from './oauth/Router'
+import Dict from './dict/Router'
 
 
 const store = createStore(
@@ -25,9 +27,12 @@ const Widget = React.createClass({
     return (
       <Provider store={store}>
         <Router history={history}>
-          {Base}
-          {Oauth}
-          <Route path="*" component={NoMatch}/>
+          <Route path='/' component={Layout}>
+            {Base}
+            {Oauth}
+            {Dict}
+            <Route path="*" component={NoMatch}/>
+          </Route>
         </Router>
       </Provider>,
     );

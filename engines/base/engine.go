@@ -11,7 +11,6 @@ import (
 	"github.com/itpkg/web/config"
 	"github.com/itpkg/web/i18n"
 	"github.com/itpkg/web/settings"
-	"github.com/itpkg/web/token"
 	"github.com/jinzhu/gorm"
 )
 
@@ -41,16 +40,6 @@ func (p *Engine) Map(inj inject.Injector) martini.Handler {
 		inj.Map(&cache.RedisProvider{
 			Redis:  re,
 			Prefix: "cache://",
-		})
-
-		//jwt for oauth
-		key, err := cfg.Key(60, 17)
-		if err != nil {
-			lg.Fatal(err)
-		}
-		inj.Map(&token.Jwt{
-			Provider: &token.RedisProvider{Redis: re},
-			Key:      key,
 		})
 
 	}

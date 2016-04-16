@@ -4,11 +4,11 @@ import (
 	"log"
 
 	"github.com/itpkg/web"
+	_ "github.com/itpkg/web/engines/base"
 	_ "github.com/itpkg/web/engines/blog"
 	_ "github.com/itpkg/web/engines/books"
 	_ "github.com/itpkg/web/engines/cms"
 	_ "github.com/itpkg/web/engines/dict"
-	_ "github.com/itpkg/web/engines/oauth"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 

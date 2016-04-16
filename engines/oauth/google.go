@@ -3,6 +3,7 @@ package oauth
 import (
 	"encoding/json"
 	"os"
+	"time"
 
 	"github.com/itpkg/web"
 	"github.com/jinzhu/gorm"
@@ -41,6 +42,8 @@ func (p *GoogleUser) Save(db *gorm.DB) (*User, error) {
 		u.UID = web.UUID()
 		u.ProviderID = p.ID
 		u.ProviderType = "google"
+		now := time.Now()
+		u.ConfirmedAt = &now
 		db.Create(&u)
 	}
 

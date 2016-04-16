@@ -3,6 +3,7 @@ cms.tags.index = 标签列表
 notices.index = 通知列表
 pages.index = 文章列表
 epub.index = Epub电子书列表
+dict.index = 字典
 
 buttons.more = 更多
 buttons.view = 查看
@@ -12,6 +13,7 @@ locales.zh_Hans = 简体中文
 
 links.home = 主页
 
+messages.please_sign_in = 您需要登录才能继续。
 messages.please_waiting = 请耐心等待。
 messages.no_match = 页面不存在。
 messages.build_using = 使用 <a href="{{link}}" target="_blank">{{link}}</a> 搭建.

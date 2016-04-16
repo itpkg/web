@@ -22,6 +22,8 @@ const Widget = React.createClass({
       links = [
         {href:"/users/dashboard", label:i18next.t("users.dashboard")},
         null,
+        {href:"/dict", label:i18next.t("dict.index")},
+        null,
         {label:i18next.t("users.sign_out"), click:onSignOut},
       ];
     }else{

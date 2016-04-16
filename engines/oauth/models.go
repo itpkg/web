@@ -43,6 +43,11 @@ func (p *User) IsLocked() bool {
 	return p.LockedAt != nil
 }
 
+//IsAvailable is available?
+func (p *User) IsAvailable() bool {
+	return p.IsConfirmed() && !p.IsLocked()
+}
+
 //SetGravatar set gravatar logo
 func (p *User) SetGravatar() {
 	buf := md5.Sum([]byte(strings.ToLower(p.Email)))

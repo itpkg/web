@@ -1,9 +1,14 @@
 package oauth
 
 import (
+	"log"
+
 	"github.com/codegangsta/inject"
+	"github.com/garyburd/redigo/redis"
 	"github.com/go-martini/martini"
 	"github.com/itpkg/web"
+	"github.com/itpkg/web/config"
+	"github.com/itpkg/web/token"
 	"github.com/jinzhu/gorm"
 )
 
@@ -13,7 +18,16 @@ type Engine struct {
 
 //Map map objects
 func (p *Engine) Map(inj inject.Injector) martini.Handler {
-	return func(db *gorm.DB) {
+	return func(re *redis.Pool, lg *log.Logger, cfg *config.Model, db *gorm.DB) {
+
+		key, err := cfg.Key(60, 17)
+		if err != nil {
+			lg.Fatal(err)
+		}
+		inj.Map(&token.Jwt{
+			Provider: &token.RedisProvider{Redis: re},
+			Key:      key,
+		})
 
 		inj.Map(&Dao{Db: db})
 	}
