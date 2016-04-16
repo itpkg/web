@@ -30,7 +30,7 @@ type User struct {
 	ProviderType string `sql:"not null;default:'unknown';index"`
 	ProviderID   string `sql:"not null;index"`
 
-	LastSignIn  time.Time  `sql:"not null" json:"last_sign_in"`
+	LastSignIn  *time.Time `json:"last_sign_in"`
 	SignInCount uint       `sql:"not null;default:0" json:"sign_in_count"`
 	ConfirmedAt *time.Time `json:"confirmed_at"`
 	LockedAt    *time.Time `json:"locked_at"`

@@ -39,6 +39,8 @@ func (p *Engine) Map(inj inject.Injector) martini.Handler {
 			Redis:  cfg.Redis.Open(),
 			Prefix: "cache://",
 		})
+
+		inj.Map(&Dao{Db: db})
 	}
 }
 

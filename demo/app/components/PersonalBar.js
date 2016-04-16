@@ -19,7 +19,9 @@ const Widget = React.createClass({
     if (this.isSignIn()){
       title = i18next.t("users.welcome", {name:user.name});
       links = [
-        {href:"/users/dashboard", label:i18next.t("users.dashboard")}
+        {href:"/users/dashboard", label:i18next.t("users.dashboard")},
+        null,
+        {href:"/users/sign_out", label:i18next.t("users.sign_out")},
       ];
     }else{
       title = i18next.t("users.sign_in_or_up");

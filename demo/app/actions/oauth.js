@@ -1,10 +1,10 @@
 import { SIGN_IN, SIGN_OUT, OAUTH2 } from '../constants'
 
 
-export function signIn(user) {
+export function signIn(token) {
     return {
         type: SIGN_IN,
-        user: user
+        token:token
     }
 }
 

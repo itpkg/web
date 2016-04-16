@@ -20,3 +20,4 @@ users.welcome = 欢迎你, {{name}}.
 users.sign_in_or_up = 登录/注册
 users.sign_in_with_google = 使用Google账户登录。
 users.dashboard = 控制面板
+users.sign_out = 安全退出

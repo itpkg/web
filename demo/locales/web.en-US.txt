@@ -20,3 +20,4 @@ users.welcome = Welcome, {{name}}.
 users.sign_in_or_up = Sign In/Up
 users.sign_in_with_google = Sign in with google account.
 users.dashboard = Dashboard
+users.sign_out = Sign out
