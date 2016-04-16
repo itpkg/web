@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/itpkg/web"
-	"github.com/itpkg/web/engines/base"
 	"github.com/jinzhu/gorm"
 
 	"golang.org/x/oauth2"
@@ -27,9 +26,9 @@ type GoogleUser struct {
 }
 
 //Save save user to database
-func (p *GoogleUser) Save(db *gorm.DB) (*base.User, error) {
+func (p *GoogleUser) Save(db *gorm.DB) (*User, error) {
 
-	var u base.User
+	var u User
 	err := db.Where("provider_id = ? AND provider_type = ?", p.ID, "google").First(&u).Error
 	u.Email = p.Email
 	u.Name = p.Name

@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/go-martini/martini"
-	"github.com/itpkg/web/engines/base"
 	"github.com/itpkg/web/token"
 	"github.com/jinzhu/gorm"
 	"github.com/martini-contrib/render"
@@ -15,11 +14,11 @@ func getSignIn(g *Google, r render.Render) {
 	r.JSON(http.StatusOK, map[string]string{"google": g.To().AuthCodeURL("state")})
 }
 
-func postSignIn(jwt *token.Jwt, dao *base.Dao, db *gorm.DB, g *Google, rdr render.Render, req *http.Request) {
+func postSignIn(jwt *token.Jwt, dao *Dao, db *gorm.DB, g *Google, rdr render.Render, req *http.Request) {
 	req.ParseForm()
 	flag := req.Form.Get("type")
 	code := req.Form.Get("code")
-	var user *base.User
+	var user *User
 	var err error
 	switch flag {
 	case "google":
