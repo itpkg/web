@@ -8,7 +8,7 @@ import (
 type Model struct {
 	gorm.Model
 
-	Key  string `gorm:"not null;unique"`
+	Key  string `gorm:"not null;unique;type:VARCHAR(255)"`
 	Val  []byte `gorm:"not null"`
 	Flag bool   `gorm:"not null"`
 }

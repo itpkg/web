@@ -1,8 +1,33 @@
 package dict
 
-import "github.com/go-martini/martini"
+import (
+	"net/http"
+
+	"github.com/go-martini/martini"
+	"github.com/martini-contrib/render"
+)
+
+func postIndex(dp Provider, req *http.Request, r render.Render) {
+	req.ParseForm()
+
+	if rs, err := dp.Query(req.FormValue("keyword")); err == nil {
+		r.Text(http.StatusOK, rs)
+	} else {
+		r.Text(http.StatusInternalServerError, err.Error())
+	}
+}
+
+func getIndex(dp Provider, r render.Render) {
+	if ds, err := dp.List(); err == nil {
+		r.JSON(http.StatusOK, ds)
+	} else {
+		r.Text(http.StatusInternalServerError, err.Error())
+	}
+
+}
 
 //Mount mount to web
 func (p *Engine) Mount(rt martini.Router) {
-
+	rt.Get("/dict", getIndex)
+	rt.Post("/dict", postIndex)
 }

@@ -10,9 +10,9 @@ import (
 //Locale locale model
 type Locale struct {
 	gorm.Model
-	Lang    string `sql:"not null;type:varchar(8);index"`
-	Code    string `sql:"not null;index"`
-	Message string `sql:"not null;type:varchar(800)"`
+	Lang    string `gorm:"not null;type:varchar(8);index"`
+	Code    string `gorm:"not null;index;type:VARCHAR(255)"`
+	Message string `gorm:"not null;type:varchar(800)"`
 }
 
 //DatabaseProvider db provider

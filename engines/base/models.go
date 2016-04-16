@@ -20,18 +20,18 @@ type Model struct {
 //User user model
 type User struct {
 	gorm.Model
-	Email    string `sql:"not null;index" json:"email"`
-	UID      string `sql:"not null;unique_index;type:char(36)" json:"uid"`
-	Home     string `sql:"not null" json:"home"`
-	Logo     string `sql:"not null" json:"logo"`
-	Name     string `sql:"not null" json:"name"`
-	Password string `sql:"not null;default:'-'" json:"-"`
+	Email    string `gorm:"not null;index;type:VARCHAR(255)" json:"email"`
+	UID      string `gorm:"not null;unique_index;type:char(36)" json:"uid"`
+	Home     string `gorm:"not null;type:VARCHAR(255)" json:"home"`
+	Logo     string `gorm:"not null;type:VARCHAR(255)" json:"logo"`
+	Name     string `gorm:"not null;type:VARCHAR(255)" json:"name"`
+	Password string `gorm:"not null;default:'-';type:VARCHAR(500)" json:"-"`
 
-	ProviderType string `sql:"not null;default:'unknown';index"`
-	ProviderID   string `sql:"not null;index"`
+	ProviderType string `gorm:"not null;default:'unknown';index;type:VARCHAR(255)"`
+	ProviderID   string `gorm:"not null;index;type:VARCHAR(255)"`
 
 	LastSignIn  *time.Time `json:"last_sign_in"`
-	SignInCount uint       `sql:"not null;default:0" json:"sign_in_count"`
+	SignInCount uint       `gorm:"not null;default:0" json:"sign_in_count"`
 	ConfirmedAt *time.Time `json:"confirmed_at"`
 	LockedAt    *time.Time `json:"locked_at"`
 
@@ -62,19 +62,19 @@ func (p User) String() string {
 //Log log model
 type Log struct {
 	ID        uint      `gorm:"primary_key" json:"id"`
-	UserID    uint      `sql:"not null" json:"-"`
+	UserID    uint      `gorm:"not null" json:"-"`
 	User      User      `json:"-"`
-	Message   string    `sql:"not null" json:"message"`
-	CreatedAt time.Time `sql:"not null;default:current_timestamp" json:"created_at"`
+	Message   string    `gorm:"not null;type:VARCHAR(255)" json:"message"`
+	CreatedAt time.Time `gorm:"not null;default:current_timestamp" json:"created_at"`
 }
 
 //Role role model
 type Role struct {
 	Model
 
-	Name         string `sql:"not null;index"`
-	ResourceType string `sql:"not null;default:'-';index"`
-	ResourceID   uint   `sql:"not null;default:0"`
+	Name         string `gorm:"not null;index;type:VARCHAR(255)"`
+	ResourceType string `gorm:"not null;default:'-';index;type:VARCHAR(255)"`
+	ResourceID   uint   `gorm:"not null;default:0"`
 }
 
 func (p Role) String() string {
@@ -85,11 +85,11 @@ func (p Role) String() string {
 type Permission struct {
 	Model
 	User   User
-	UserID uint `sql:"not null"`
+	UserID uint `gorm:"not null"`
 	Role   Role
-	RoleID uint      `sql:"not null"`
-	Begin  time.Time `sql:"not null;default:current_date;type:date"`
-	End    time.Time `sql:"not null;default:'1000-1-1';type:date"`
+	RoleID uint      `gorm:"not null"`
+	Begin  time.Time `gorm:"not null;default:current_date;type:date"`
+	End    time.Time `gorm:"not null;default:'1000-1-1';type:date"`
 }
 
 //EndS endtime
@@ -111,6 +111,6 @@ func (p *Permission) Enable() bool {
 //Notice notice model
 type Notice struct {
 	Model
-	Lang    string `sql:"not null;type:varchar(8);index" json:"lang"`
-	Content string `sql:"not null;type:text" json:"content"`
+	Lang    string `gorm:"not null;type:varchar(8);index" json:"lang"`
+	Content string `gorm:"not null;type:text" json:"content"`
 }

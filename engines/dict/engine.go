@@ -23,7 +23,8 @@ func (p *Engine) Map(inj inject.Injector) martini.Handler {
 //Migrate call by db:migrate
 func (p *Engine) Migrate() martini.Handler {
 	return func(db *gorm.DB) {
-
+		db.AutoMigrate(&Note{})
+		db.Model(&Note{}).AddUniqueIndex("idx_dict_notes_user_title", "user_id", "title")
 	}
 }
 
