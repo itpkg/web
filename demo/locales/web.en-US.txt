@@ -3,10 +3,21 @@ cms.tags.index = Tags
 notices.index = Notices
 pages.index = Pages
 epub.index = Epub books
+
 dict.index = Dict
+dict.notes.index = Words
 
 buttons.more = More
 buttons.view = View
+buttons.search = Search
+buttons.new = New
+buttons.edit = Edit
+buttons.save = Save
+
+models.dict.note.title = Title
+models.dict.note.body = Body
+
+form.keyword = Keyword
 
 locales.en_US = English
 locales.zh_Hans = 简体中文

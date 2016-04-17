@@ -15,10 +15,11 @@ module.exports = function(options) {
         'react-router',
         'react-redux',
         'react-bootstrap',
-        'react-router-redux',
+        'react-router-redux',        
 
         'jwt-decode',
         'url-parse',
+        'marked',
 
         'i18next',
         'i18next-xhr-backend',

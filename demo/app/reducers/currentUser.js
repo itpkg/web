@@ -1,13 +1,11 @@
 import jwtDecode from 'jwt-decode'
 
-import { SIGN_IN, SIGN_OUT } from '../constants'
-
-const key = 'token';
+import { SIGN_IN, SIGN_OUT, TOKEN as key } from '../constants'
 
 function parse(tkn) {
     try {
         return jwtDecode(tkn);
-    } catch (e) {      
+    } catch (e) {
         return {}
     }
 }

@@ -30,7 +30,7 @@ func getIndex(dp Provider, r render.Render) {
 
 func indexNotes(db *gorm.DB, u *oauth.User, r render.Render) {
 	var notes []Note
-	if err := db.Where("user_id = ?", u.ID).Find(&notes).Error; err == nil {
+	if err := db.Select([]string{"id", "title"}).Where("user_id = ?", u.ID).Find(&notes).Error; err == nil {
 		r.JSON(http.StatusOK, notes)
 	} else {
 		r.Text(http.StatusInternalServerError, err.Error())
