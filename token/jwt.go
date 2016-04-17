@@ -50,18 +50,18 @@ func (p *Jwt) parse(fn parseFunc) (map[string]interface{}, error) {
 }
 
 //New generate token
-func (p *Jwt) New(data map[string]interface{}, minutes uint) (string, error) {
+func (p *Jwt) New(data map[string]interface{}, exp time.Duration) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS512)
 	for k, v := range data {
 		token.Claims[k] = v
 	}
-	token.Claims["exp"] = time.Now().Add(time.Minute * time.Duration(minutes)).Unix()
+	token.Claims["exp"] = time.Now().Add(exp).Unix()
 	kid := uuid.New()
 	key := make([]byte, 32)
 	if _, err := rand.Read(key); err != nil {
 		return "", err
 	}
-	if err := p.Provider.Set(kid, key); err != nil {
+	if err := p.Provider.Set(kid, key, exp); err != nil {
 		return "", err
 	}
 

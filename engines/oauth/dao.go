@@ -11,6 +11,13 @@ type Dao struct {
 	Db *gorm.DB
 }
 
+//GetUser get user by uid
+func (p *Dao) GetUser(uid string) (*User, error) {
+	var u User
+	err := p.Db.Where("uid = ?", uid).First(&u).Error
+	return &u, err
+}
+
 //Is is?
 func (p *Dao) Is(user uint, name string) bool {
 	return p.Can(user, name, "-", 0)

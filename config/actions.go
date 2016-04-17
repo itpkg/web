@@ -7,8 +7,10 @@ import (
 	"strconv"
 
 	"github.com/codegangsta/cli"
+	"github.com/garyburd/redigo/redis"
 	"github.com/go-martini/martini"
 	"github.com/itpkg/web"
+	"github.com/jinzhu/gorm"
 	"github.com/jrallison/go-workers"
 )
 
@@ -102,5 +104,27 @@ func Action(fn func(*Model, *cli.Context) error) func(*cli.Context) {
 		}
 		cfg.Env = env
 		return fn(&cfg, ctx)
+	})
+}
+
+//DbAction database action
+func DbAction(fn func(*gorm.DB, *cli.Context) error) func(*cli.Context) {
+	return Action(func(cfg *Model, ctx *cli.Context) error {
+		db, err := cfg.Database.Open()
+		if !cfg.IsProduction() {
+			db.LogMode(true)
+		}
+		if err != nil {
+			return err
+		}
+		return fn(db, ctx)
+	})
+}
+
+//RedisAction redis action
+func RedisAction(fn func(*redis.Pool, *cli.Context) error) func(*cli.Context) {
+	return Action(func(cfg *Model, ctx *cli.Context) error {
+		re := cfg.Redis.Open()
+		return fn(re, ctx)
 	})
 }

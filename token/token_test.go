@@ -33,7 +33,7 @@ func TestRedis(t *testing.T) {
 
 	jwt := token.Jwt{Provider: tp, Key: []byte("hello")}
 
-	tk, err := jwt.New(val1, 10)
+	tk, err := jwt.New(val1, 10*time.Hour*24*7)
 	if err == nil {
 		t.Logf("Token[%v]: %s", val1, tk)
 	} else {

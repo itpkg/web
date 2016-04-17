@@ -3,6 +3,7 @@ package oauth
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/go-martini/martini"
 	"github.com/itpkg/web/token"
@@ -39,7 +40,7 @@ func postSignIn(jwt *token.Jwt, dao *Dao, db *gorm.DB, g *Google, rdr render.Ren
 				"id":      user.UID,
 				"name":    user.Name,
 				"isAdmin": dao.Is(user.ID, "admin"),
-			}, 7*24*60)
+			}, 7*24*time.Hour)
 	}
 
 	if err == nil {
