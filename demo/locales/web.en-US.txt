@@ -13,8 +13,10 @@ buttons.search = Search
 buttons.new = New
 buttons.edit = Edit
 buttons.save = Save
+buttons.remove = Remove
+buttons.delete = Delete
 
-models.dict.note.title = Title
+models.dict.note.title = Keyword
 models.dict.note.body = Body
 
 form.keyword = Keyword

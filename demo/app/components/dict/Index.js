@@ -28,6 +28,7 @@ const Widget = React.createClass({
           </div>
           <div className="col-md-3">
             <Edit note={this.state.note}/>
+            <br/>
             <Index notes={this.state.notes}/>
           </div>
         </div>) :

@@ -14,8 +14,10 @@ buttons.search = 搜索
 buttons.new = 新建
 buttons.edit = 编辑
 buttons.save = 保存
+buttons.remove = 移除
+buttons.delete = 删除
 
-models.dict.note.title = 标题
+models.dict.note.title = 关键字
 models.dict.note.body = 内容
 
 

@@ -2,7 +2,7 @@
 # Begin
 
 ```
-git clone github.com/itpkg/web    
+go get github.com/itpkg/web    
 cd $GOPATH/github.com/itpkg/web    
 cd demo    
 make    

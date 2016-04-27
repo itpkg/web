@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react'
 import { connect } from 'react-redux'
-import { Form, FormGroup, ControlLabel, Col, FormControl, Button } from 'react-bootstrap'
+import { Form, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
 
 import i18next from 'i18next'
 
@@ -34,26 +34,16 @@ const Widget = React.createClass({
       <fieldset>
         <Form inline>
           <FormGroup controlId="keyword">
-            <ControlLabel>{i18next.t("buttons.search")}：</ControlLabel>
+            <ControlLabel>{i18next.t("form.keyword")}：</ControlLabel>
             <FormControl type="text" onChange={this.handleChange}/>
           </FormGroup>
           &nbsp;
-          <Button type="submit" onClick={this.handleSubmit}>{i18next.t("buttons.search")}</Button>
+          <Button bsStyle="primary" type="submit" onClick={this.handleSubmit}>{i18next.t("buttons.search")}</Button>
         </Form>
         <br/>
         { rst ? <pre>{rst}</pre> : <br/>}
     </fieldset>
     )
-    // return (
-    //   <fieldset>
-    //     <form className="form-horizontal" onSubmit={this.handleSubmit}>
-    //       <Input type="text" onChange={this.handleChange} labelClassName="col-md-2" wrapperClassName="col-md-9" label={i18next.t("form.keyword")}/>
-    //       <ButtonInput type="submit" wrapperClassName="col-md-offset-2 col-md-10" value={i18next.t("buttons.search")} />
-    //     </form>
-    //     <br/>
-    //     { rst ? <pre className="col-md-offset-1 col-md-10">{rst}</pre> : <br/>}
-    //   </fieldset>
-    // )
   }
 });
 

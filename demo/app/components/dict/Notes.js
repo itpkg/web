@@ -1,32 +1,58 @@
 import React, {PropTypes} from 'react'
 import { connect } from 'react-redux'
-import { Form } from 'react-bootstrap'
+import { Form, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
 import i18next from 'i18next'
 
 import Markdown from '../Markdown'
-
+import {ajax} from '../../utils'
 
 export const Edit = React.createClass({
   getInitialState: function() {
-    return {label:'buttons.new'};
+    return {
+      data:{},
+      items:[],
+      cur:null
+    };
   },
   handleSubmit: function(e) {
     e.preventDefault();
+    var cur = this.state.cur;
+    ajax(
+      'post',
+      '/dict/notes'+(cur ? '/'+cur.id : ''),
+      this.state.data,
+      function(rst){
+        this.setState({items:rst});
+      }.bind(this),
+      null,
+      true
+    );
   },
   handleChange: function(e) {
-    console.log(e.target);
-    //this.setState({keyword: e.target.value});
+    var data = this.state.data;
+    data[e.target.id]= e.target.value;
+    this.setState({data:data});
   },
   render: function() {
-    return (<Form></Form>)
-    // return (<fieldset>
-    //   <legend>{i18next.t(this.state.label)}</legend>
-    //     <form onSubmit={this.handleSubmit}>
-    //       <Input type="text" id='title' onChange={this.handleChange} label={i18next.t("models.dict.note.title")}/>
-    //       <Input type="textarea" id='body' onChange={this.handleChange} label={i18next.t("models.dict.note.body")}/>
-    //       <ButtonInput type="submit" value={i18next.t("buttons.save")} />
-    //     </form>
-    // </fieldset>)
+    var cur = this.state.cur;
+    var title = cur ? 'edit':'new';
+
+    return (<fieldset>
+      <legend>{i18next.t('buttons.'+title)}</legend>
+        <Form>
+          <FormGroup controlId="title">
+            <ControlLabel>{i18next.t("models.dict.note.title")}</ControlLabel>
+            <FormControl type="text" onChange={this.handleChange}/>
+          </FormGroup>
+          <FormGroup controlId="body">
+            <ControlLabel>{i18next.t("models.dict.note.body")}</ControlLabel>
+            <FormControl componentClass="textarea" onChange={this.handleChange}/>
+          </FormGroup>
+          <Button bsStyle="primary" type="submit" onClick={this.handleSubmit}>{i18next.t("buttons.save")}</Button>
+          &nbsp;
+          {cur ? <Button bsStyle="danger" onClick={this.handleDestroy}>{i18next.t("buttons.delete")}</Button>:<span/>}
+        </Form>
+    </fieldset>)
   }
 });
 
