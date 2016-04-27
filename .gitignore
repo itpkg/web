@@ -1,1 +1,2 @@
 *.toml
+!vendor.json

@@ -4,25 +4,23 @@ import (
 	"crypto/aes"
 	"fmt"
 	"log"
-	"strconv"
 
 	"github.com/codegangsta/cli"
 	"github.com/garyburd/redigo/redis"
 	"github.com/go-martini/martini"
 	"github.com/itpkg/web"
 	"github.com/jinzhu/gorm"
-	"github.com/jrallison/go-workers"
 )
 
 //IocAction ioc action
 func IocAction(fn func(*martini.ClassicMartini, *cli.Context) error) func(*cli.Context) {
 	return Action(func(cfg *Model, ctx *cli.Context) error {
-		workers.Configure(map[string]string{
-			"server":   fmt.Sprintf(cfg.Redis.URL()),
-			"database": strconv.Itoa(cfg.Redis.Db),
-			"pool":     strconv.Itoa(cfg.Workers.Pool),
-			"process":  cfg.Workers.ID,
-		})
+		// workers.Configure(map[string]string{
+		// 	"server":   fmt.Sprintf(cfg.Redis.URL()),
+		// 	"database": strconv.Itoa(cfg.Redis.Db),
+		// 	"pool":     strconv.Itoa(cfg.Workers.Pool),
+		// 	"process":  cfg.Workers.ID,
+		// })
 
 		mux := martini.Classic()
 
