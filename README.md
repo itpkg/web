@@ -3,12 +3,16 @@
 See [demo](Demo)
 
 # Devel
-    go get -u github.com/nsf/gocode
-    go get -u golang.org/x/tools/cmd/goimports
-    go get -u github.com/alecthomas/gometalinter
-    go get -u github.com/kardianos/govendor
-    govendor sync
-    
+
+```
+go get -u github.com/nsf/gocode
+go get -u golang.org/x/tools/cmd/goimports
+go get -u github.com/alecthomas/gometalinter
+go get -u github.com/kardianos/govendor
+go get -u github.com/itpkg/web
+cd $GOPATH/github.com/itpkg/web
+govendor sync
+```
 
 # Editor
 ## Atom
